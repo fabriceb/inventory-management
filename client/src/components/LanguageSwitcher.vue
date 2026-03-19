@@ -1,7 +1,8 @@
 <template>
-  <div class="language-switcher">
+  <div class="language-switcher" :class="{ 'dark-theme': darkTheme }">
     <button
       class="language-button"
+      :class="{ 'dark-theme': darkTheme }"
       @click="toggleDropdown"
       @blur="handleBlur"
     >
@@ -17,20 +18,22 @@
         <path d="M10 3C10 3 7.5 5.5 7.5 10C7.5 14.5 10 17 10 17" stroke="currentColor" stroke-width="1.5"/>
         <path d="M10 3C10 3 12.5 5.5 12.5 10C12.5 14.5 10 17 10 17" stroke="currentColor" stroke-width="1.5"/>
       </svg>
-      <span class="language-label">{{ localeName }}</span>
-      <svg
-        class="chevron"
-        :class="{ 'chevron-open': isDropdownOpen }"
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-      >
-        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
+      <template v-if="!compact">
+        <span class="language-label">{{ localeName }}</span>
+        <svg
+          class="chevron"
+          :class="{ 'chevron-open': isDropdownOpen }"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+        >
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </template>
     </button>
 
-    <div v-if="isDropdownOpen" class="dropdown-menu">
+    <div v-if="isDropdownOpen" class="dropdown-menu" :class="{ 'dropdown-upward': darkTheme }">
       <button
         v-for="locale in availableLocales"
         :key="locale"
@@ -57,6 +60,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useI18n } from '../composables/useI18n'
+
+const props = defineProps({
+  compact: { type: Boolean, default: false },
+  darkTheme: { type: Boolean, default: false }
+})
 
 const { currentLocale, setLocale, availableLocales, localeName } = useI18n()
 
@@ -179,5 +187,33 @@ const selectLanguage = (locale) => {
 .check-icon {
   color: #2563eb;
   flex-shrink: 0;
+}
+
+/* Dark theme styles for sidebar context */
+.language-button.dark-theme {
+  background: transparent;
+  border-color: transparent;
+  color: #94a3b8;
+}
+
+.language-button.dark-theme:hover {
+  background: #1e293b;
+  border-color: transparent;
+}
+
+.language-button.dark-theme .globe-icon {
+  color: #94a3b8;
+}
+
+.language-button.dark-theme .language-label {
+  color: #e2e8f0;
+}
+
+/* Dropdown opens upward when in sidebar */
+.dropdown-menu.dropdown-upward {
+  bottom: calc(100% + 0.5rem);
+  top: auto;
+  left: 0;
+  right: auto;
 }
 </style>
