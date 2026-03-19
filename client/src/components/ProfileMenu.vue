@@ -1,27 +1,30 @@
 <template>
-  <div class="profile-menu">
+  <div class="profile-menu" :class="{ 'dark-theme': darkTheme }">
     <button
       class="profile-button"
+      :class="{ 'dark-theme': darkTheme }"
       @click="toggleDropdown"
       @blur="handleBlur"
     >
       <div class="avatar">
         {{ getInitials(currentUser.name) }}
       </div>
-      <span class="profile-name">{{ currentUser.name }}</span>
-      <svg
-        class="chevron"
-        :class="{ 'chevron-open': isDropdownOpen }"
-        width="16"
-        height="16"
-        viewBox="0 0 16 16"
-        fill="none"
-      >
-        <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
+      <template v-if="!compact">
+        <span class="profile-name">{{ currentUser.name }}</span>
+        <svg
+          class="chevron"
+          :class="{ 'chevron-open': isDropdownOpen }"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+        >
+          <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </template>
     </button>
 
-    <div v-if="isDropdownOpen" class="dropdown-menu">
+    <div v-if="isDropdownOpen" class="dropdown-menu" :class="{ 'dropdown-upward': darkTheme }">
       <div class="dropdown-header">
         <div class="avatar-large">
           {{ getInitials(currentUser.name) }}
@@ -77,6 +80,11 @@
 import { ref, computed } from 'vue'
 import { useAuth } from '../composables/useAuth'
 import { useI18n } from '../composables/useI18n'
+
+const props = defineProps({
+  compact: { type: Boolean, default: false },
+  darkTheme: { type: Boolean, default: false }
+})
 
 const { currentUser, logout, getInitials } = useAuth()
 const { t } = useI18n()
@@ -277,5 +285,33 @@ const handleLogout = () => {
   border-radius: 12px;
   min-width: 20px;
   text-align: center;
+}
+
+/* Dark theme styles for sidebar context */
+.profile-button.dark-theme {
+  background: transparent;
+  border-color: transparent;
+  color: #94a3b8;
+}
+
+.profile-button.dark-theme:hover {
+  background: #1e293b;
+  border-color: transparent;
+}
+
+.profile-button.dark-theme .profile-name {
+  color: #e2e8f0;
+}
+
+.profile-button.dark-theme .chevron {
+  color: #64748b;
+}
+
+/* Dropdown opens upward when in sidebar */
+.dropdown-menu.dropdown-upward {
+  bottom: calc(100% + 0.5rem);
+  top: auto;
+  left: 0;
+  right: auto;
 }
 </style>

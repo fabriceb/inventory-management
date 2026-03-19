@@ -176,31 +176,32 @@ export default {
 .orders-table {
   table-layout: fixed;
   width: 100%;
+  min-width: 800px;
 }
 
 /* Column widths */
 .col-order-number {
-  width: 130px;
+  width: 13%;
 }
 
 .col-customer {
-  width: 180px;
+  width: 18%;
 }
 
 .col-items {
-  width: 200px;
+  width: 20%;
 }
 
 .col-status {
-  width: 130px;
+  width: 13%;
 }
 
 .col-date {
-  width: 140px;
+  width: 14%;
 }
 
 .col-value {
-  width: 120px;
+  width: 12%;
 }
 
 /* Items details styling */
